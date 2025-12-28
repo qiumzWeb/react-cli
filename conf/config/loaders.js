@@ -1,0 +1,134 @@
+var path = require('path')
+var devMode = process.env.NODE_ENV !== 'production'
+var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+var { merge } = require('webpack-merge');
+var { utils, processConfig } = require('../options')
+module.exports = [
+  {
+    test: /\.t|jsx?$/,
+    use: [
+      {
+        loader: "thread-loader",
+        // 有同样配置的 loader 会共享一个 worker 池
+        options: {
+          // 产生的 worker 的数量，默认是 (cpu 核心数 - 1)，或者，
+          // 在 require('os').cpus() 是 undefined 时回退至 1
+          // workers: 3,
+
+          // 一个 worker 进程中并行执行工作的数量
+          // 默认为 20
+          workerParallelJobs: 60,
+    
+          // 额外的 node.js 参数
+          workerNodeArgs: ['--max-old-space-size=1024'],
+    
+          // 允许重新生成一个僵死的 work 池
+          // 这个过程会降低整体编译速度
+          // 并且开发环境应该设置为 false
+          poolRespawn: false,
+    
+          // 闲置时定时删除 worker 进程
+          // 默认为 500（ms）
+          // 可以设置为无穷大，这样在监视模式(--watch)下可以保持 worker 持续存在
+          poolTimeout: 2000,
+
+          // 池分配给 worker 的工作数量
+          // 默认为 200
+          // 降低这个数值会降低总体的效率，但是会提升工作分布更均一
+          // poolParallelJobs: 50,
+
+          // 池的名称
+          // 可以修改名称来创建其余选项都一样的池
+          name: "node-build-pool"
+        },
+      },
+      {
+        loader: 'babel-loader',
+          options: merge({
+            presets: [
+              [
+                "@babel/preset-env",
+                {
+                  useBuiltIns: "usage",
+                  corejs: 3.22
+                }
+              ],
+              "@babel/preset-react",
+              "@babel/preset-flow"
+            ]
+          }, processConfig.babelLoaderOptions)
+        }
+    ],
+    exclude: /node_modules/,
+  },
+  {
+    test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+    use: [
+        {
+          loader: 'url-loader',
+          options: {
+              limit: 1024,
+              outputPath: 'imgs',
+          }
+        }
+    ],
+  },
+  {
+    test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+    use: [
+        {
+          loader: 'url-loader',
+          options: {
+              limit: 10000,
+              name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+          }
+        }
+    ],
+  },
+  {
+    test: /\.(sa|sc|c)ss$/,
+    use: [
+      devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+      {
+        loader: 'css-loader',
+        options: merge({
+          modules: {
+            localIdentName: '[name]__[local]___[hash:base64:5]',
+            exportLocalsConvention: 'camelCase'
+          }
+        }, processConfig.cssLoaderOptions)
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          // 2. PostCSS 插件配置写在这里
+          postcssOptions: merge({
+            plugins: [
+              require('autoprefixer')({
+                overrideBrowserslist: [
+                  '> 0.5%',
+                  'last 2 versions',
+                  'not dead',
+                  'iOS >= 9',
+                  'Android >= 5'
+                ]
+              })
+              // 如果还有其他插件，继续在这里添加，例如：
+              // require('postcss-preset-env')({ ... })
+            ]
+          }, processConfig.postcssLoaderOptions)
+        }
+      },
+      {
+        loader: "sass-loader",
+        options: merge({
+          additionalData: `@import "@/global.scss";`,
+          implementation: require('sass'),
+          sassOptions: {
+            fiber: false,
+          },
+        }, processConfig.sassLoaderOptions)
+      }
+    ],
+  },
+]
