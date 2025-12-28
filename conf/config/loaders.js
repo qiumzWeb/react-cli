@@ -20,7 +20,7 @@ module.exports = [
           workerParallelJobs: 60,
     
           // 额外的 node.js 参数
-          workerNodeArgs: ['--max-old-space-size=1024'],
+          workerNodeArgs: ['--max-old-space-size=2048'],
     
           // 允许重新生成一个僵死的 work 池
           // 这个过程会降低整体编译速度

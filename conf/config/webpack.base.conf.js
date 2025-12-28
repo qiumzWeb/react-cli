@@ -7,6 +7,7 @@ var loaders = require('./loaders');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 var fs = require('fs');
+
 var entry = [];
 var entryFile = ['./src/index.js', './src/index.jsx', './src/index.ts', './src/index.tsx'];
 for (var i = 0; i < entryFile.length; i++) {
@@ -18,6 +19,7 @@ for (var i = 0; i < entryFile.length; i++) {
         // continue to next candidate
     }
 }
+
 var plugins = [];
 if (processConfig.dll) {
     plugins = [

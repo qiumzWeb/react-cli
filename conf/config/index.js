@@ -29,8 +29,7 @@ module.exports = {
           compression: 'gzip',
           buildDependencies: {
             config: [
-              './build.config.js',
-              './babel.config.js'
+              './build.config.js'
             ]
           }
         },
@@ -45,8 +44,7 @@ module.exports = {
           name: 'local_development',
           buildDependencies: {
             config: [
-              './build.config.js',
-              './babel.config.js'
+              './build.config.js'
             ]
           }
         },
