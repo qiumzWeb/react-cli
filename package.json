@@ -1,12 +1,16 @@
 {
-  "name": "buildreact",
+  "name": "qmzreact",
   "version": "1.0.0",
   "description": "前端react本地启动服务和打包工具",
-  "author": "qmz",
-  "private": true,
+  "author": {
+    "name": "qmz",
+    "email": "1223094862@qq.com"
+  },
+  "publisher": "1223094862@qq.com",
+  "private": false,
   "main": "index.js",
   "bin": {
-    "buildreact": "bin/buildreact.js"
+    "qmzreact": "bin/qmzreact.js"
   },
   "files": [
     "bin",
@@ -14,7 +18,7 @@
     "index.js"
   ],
   "keywords": [
-    "react",
+    "react-cli",
     "webpack"
   ],
   "license": "ISC",

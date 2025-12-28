@@ -16,10 +16,10 @@
 在项目根目录运行（示例）：
 ```bash
 # 使用 npm
-npm install --save-dev buildreact
+npm install --save-dev qmzreact
 
 # 或使用 yarn
-yarn add --dev buildreact
+yarn add --dev qmzreact
 ```
 
 ## 使用（示例）
@@ -27,9 +27,9 @@ yarn add --dev buildreact
 ```json
 {
     "scripts": {
-        "dev": "buildreact dev",
-        "build": "buildreact build",
-        "dll": "buildreact dll",
+        "dev": "qmzreact dev",
+        "build": "qmzreact build",
+        "dll": "qmzreact dll",
     }
 }
 ```
