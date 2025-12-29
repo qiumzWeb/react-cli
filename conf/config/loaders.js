@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 var devMode = process.env.NODE_ENV !== 'production';
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var { merge } = require('webpack-merge');

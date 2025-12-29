@@ -1,6 +1,7 @@
 var { spawn, exec, execSync  } = require('child_process');
 var ora = require('ora');
 var path = require('path');
+var chalk = require('chalk');
 var { utils, processConfig }  = require('./options');
 var childProcess;
 
@@ -28,7 +29,7 @@ if (Array.isArray(processConfig.watch) && processConfig.watch.length > 0) {
  * 启动服务
  */
 module.exports = function startServer() {
-  var spinner = ora('Starting dev server...');
+  var spinner = ora('Starting dev server... \n');
   spinner.start();
   childProcess = spawn(
     'node',
@@ -56,15 +57,15 @@ module.exports = function startServer() {
     const m = str.match(/(\d{1,3})%/);
     if (m) {
       const pct = m[1];
-      spinner.text = `Building ${pct}%`;
+      spinner.text = `Building ${chalk.green.bold(pct + '%')} `;
       if (pct === '100' || str.includes('100%')) {
-        spinner.succeed('Build 100%');
+        spinner.succeed(chalk.green.bold('Build 100%'));
         if (spinner.isSpinning) spinner.stop();
       }
       return;
     }
     if (str.includes('100%')) {
-      spinner.succeed('Build 100%');
+      spinner.succeed(chalk.green.bold('Build 100%'));
       if (spinner.isSpinning) spinner.stop();
     }
     // 捕获错误等信息并显示
