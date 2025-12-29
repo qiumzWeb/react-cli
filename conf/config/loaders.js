@@ -1,8 +1,18 @@
-var path = require('path')
-var devMode = process.env.NODE_ENV !== 'production'
-var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+var path = require('path');
+var devMode = process.env.NODE_ENV !== 'production';
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var { merge } = require('webpack-merge');
-var { utils, processConfig } = require('../options')
+var { utils, processConfig } = require('../options');
+var sassGlobalStyles = '';
+processConfig.sassGlobalStyles.forEach((item) => {
+  return sassGlobalStyles += `@import "${item}";`;
+});
+try {
+  fs.accessSync(utils.rootPath('src/global.scss'), fs.constants.F_OK);
+  sassGlobalStyles += `@import "@/global.scss";`;
+} catch (err) {
+  // console.log(err);
+};
 module.exports = [
   {
     test: /\.t|jsx?$/,
@@ -59,7 +69,18 @@ module.exports = [
           }, processConfig.babelLoaderOptions)
         }
     ],
-    exclude: /node_modules/,
+    exclude: (modulePath) => {
+      // 定义你"强制需要编译"的模块列表
+      const includeModules = processConfig.compileDependencies;
+      if (modulePath.includes('node_modules')) {
+        // 检查当前路径是否包含这些包名
+        const shouldInclude = includeModules.some(name => 
+          modulePath.includes(`node_modules${path.sep}${name}${path.sep}`));
+        return !shouldInclude;
+      } else {
+        return false;
+      }
+    }
   },
   {
     test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -122,7 +143,7 @@ module.exports = [
       {
         loader: "sass-loader",
         options: merge({
-          additionalData: `@import "@/global.scss";`,
+          additionalData: sassGlobalStyles,
           implementation: require('sass'),
           sassOptions: {
             fiber: false,

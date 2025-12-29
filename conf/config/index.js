@@ -29,7 +29,8 @@ module.exports = {
           compression: 'gzip',
           buildDependencies: {
             config: [
-              './build.config.js'
+              './build.config.js',
+              ...processConfig.cacheBuildDependencies
             ]
           }
         },
@@ -44,7 +45,8 @@ module.exports = {
           name: 'local_development',
           buildDependencies: {
             config: [
-              './build.config.js'
+              './build.config.js',
+              ...processConfig.cacheBuildDependencies
             ]
           }
         },

@@ -45,10 +45,10 @@ yarn add --dev qmzreact
 示例配置：
 ```js
 module.exports = {
-    port: 3000,
+    port: 8888,
     publicPath: '/',
     // 构建输出目录
-    buildDir: 'dist',
+    buildDir: 'build',
     alias: {
         // 默认配置
         "@": path.resolve(__dirname, 'src')
@@ -60,12 +60,13 @@ module.exports = {
             pathRewrite: { '^/api': '' }
         }
     }
+    // 监听文件新增或删除 并重启服务，防止因为文件丢失而编译报错，默认只监听components 目录下的文件，如没有这个目录则不监听，  开启后，文件监听会占用大量cpu，请谨慎使用
     watch: ['./src/components'],
     // 是否启用 https服务
     isHttps: false,
     // 是否启用 dll
     dll: false,
-    // 拆包
+    // 拆包，将第三方库单独打包，默认为{}，为默认拆包，可自定义拆包，如：
     commonChunks: {
         "echarts": ["echarts", "zrender"],
     },

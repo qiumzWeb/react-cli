@@ -30,7 +30,17 @@ if (Array.isArray(processConfig.watch) && processConfig.watch.length > 0) {
 module.exports = function startServer() {
   var spinner = ora('Starting dev server...');
   spinner.start();
-  childProcess = spawn('node', ['--max_old_space_size=4096', path.join(__dirname, './dev-server.js'), ...process.argv.slice(2)]);
+  childProcess = spawn(
+    'node',
+    ['--max_old_space_size=4096', path.join(__dirname, './dev-server.js'), ...process.argv.slice(2)],
+    {
+      env: Object.assign({}, process.env, {
+        NODE_ENV: 'development', // 根据需要修改或添加其它环境变量
+        // EXAMPLE_VAR: 'value'
+      }),
+      stdio: 'pipe'
+    }
+  );
 
   // 监听子进程输出
   childProcess.stdout.on('data', (data) => {

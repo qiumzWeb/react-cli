@@ -7,7 +7,9 @@ var argvPort = argvs.indexOf('--port') > -1 ? argvs[argvs.indexOf('--port') + 1]
 var {
     watch, port, dll, commonChunks, proxy, eslint, entry,
     nodeMiddleware, publicPath, buildDir, eslintExclude, alias,
-    cssLoaderOptions, postcssLoaderOptions, sassLoaderOptions, babelLoaderOptions,
+    cssLoaderOptions, postcssLoaderOptions, sassLoaderOptions, 
+    babelLoaderOptions, cacheBuildDependencies, compileDependencies,
+    sassGlobalStyles,
     ...webpackConfig
 } = userConfig;
 
@@ -34,7 +36,10 @@ exports.processConfig = {
     cssLoaderOptions: utils.isObj(cssLoaderOptions) ? cssLoaderOptions : {},
     postcssLoaderOptions: utils.isObj(postcssLoaderOptions) ? postcssLoaderOptions : {},
     sassLoaderOptions: utils.isObj(sassLoaderOptions) ? sassLoaderOptions : {},
-    babelLoaderOptions: utils.isObj(babelLoaderOptions) ? babelLoaderOptions : {}
+    babelLoaderOptions: utils.isObj(babelLoaderOptions) ? babelLoaderOptions : {},
+    cacheBuildDependencies: Array.isArray(cacheBuildDependencies) ? cacheBuildDependencies : [],
+    compileDependencies: Array.isArray(compileDependencies) ? compileDependencies : [],
+    sassGlobalStyles: Array.isArray(sassGlobalStyles) ? sassGlobalStyles : [],
 };
 
 exports.webpackConfig = merge({}, webpackConfig);
