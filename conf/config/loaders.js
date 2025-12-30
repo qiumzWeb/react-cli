@@ -6,11 +6,11 @@ var { merge } = require('webpack-merge');
 var { utils, processConfig } = require('../options');
 var sassGlobalStyles = '';
 processConfig.sassGlobalStyles.forEach((item) => {
-  return sassGlobalStyles += `@import "${item}";`;
+  return sassGlobalStyles += `@use "${item}" as *;`;
 });
 try {
   fs.accessSync(utils.rootPath('src/global.scss'), fs.constants.F_OK);
-  sassGlobalStyles += `@import "@/global.scss";`;
+  sassGlobalStyles += `@use "@/global.scss" as *;`;
 } catch (err) {
   // console.log(err);
 };
@@ -116,8 +116,25 @@ module.exports = [
         loader: 'css-loader',
         options: merge({
           modules: {
+            // 1. 开启“局部模式”（意味着：我要对类名进行处理）
+            mode: 'local',
+            
+            // 2. 定义生成的规则（名字长什么样）
             localIdentName: '[name]__[local]___[hash:base64:5]',
-            exportLocalsConvention: 'camelCase'
+            exportLocalsConvention: 'camelCase',
+            
+            // 3. 自定义函数：遇到 node_modules 就“放行”，否则“使用上面的规则”
+            getLocalIdent: (context, localIdentName, localName, options) => {
+              // 如果是 node_modules 里的文件
+              if (context.resourcePath.includes('node_modules')) {
+                // 直接返回原始类名（相当于变相的 global 模式）
+                return localName; 
+              }
+              
+              // 如果是自己 src 里的文件
+              // 返回 null，告诉 css-loader：“请用 localIdentName 的规则去生成哈希”
+              return null;
+            }
           }
         }, processConfig.cssLoaderOptions)
       },
