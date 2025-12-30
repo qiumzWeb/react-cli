@@ -164,6 +164,12 @@ module.exports = [
         options: merge({
           additionalData: sassGlobalStyles,
           implementation: require('sass'),
+          silenceDeprecations: [
+            'legacy-js-api',
+            'import',
+            'global-builtin',
+            'if-function',
+          ], // 静默 @import 警告
           sassOptions: {
             fiber: false,
           },
