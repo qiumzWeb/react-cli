@@ -10,7 +10,7 @@ processConfig.sassGlobalStyles.forEach((item) => {
 });
 try {
   fs.accessSync(utils.rootPath('src/global.scss'), fs.constants.F_OK);
-  sassGlobalStyles += `@import "@/global.scss";`;
+  sassGlobalStyles += `@import "~@/global.scss";`;
 } catch (err) {
   // console.log(err);
 };
@@ -143,9 +143,13 @@ module.exports = [
         }
       },
       {
-        loader: "fast-sass-loader",
+        loader: "sass-loader",
         options: merge({
-          data: sassGlobalStyles,
+          additionalData: sassGlobalStyles,
+          implementation: require('sass'),
+          sassOptions: {
+            fiber: false,
+          },
         }, processConfig.sassLoaderOptions)
       }
     ],
