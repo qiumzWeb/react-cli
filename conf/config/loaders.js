@@ -6,11 +6,11 @@ var { merge } = require('webpack-merge');
 var { utils, processConfig } = require('../options');
 var sassGlobalStyles = '';
 processConfig.sassGlobalStyles.forEach((item) => {
-  return sassGlobalStyles += `@import "${item}";`;
+  return sassGlobalStyles += `@use "${item}" as *;`;
 });
 try {
   fs.accessSync(utils.rootPath('src/global.scss'), fs.constants.F_OK);
-  sassGlobalStyles += `@import "@/global.scss";`;
+  sassGlobalStyles += `@use "@/global.scss" as *;`;
 } catch (err) {
   // console.log(err);
 };
