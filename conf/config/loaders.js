@@ -143,13 +143,9 @@ module.exports = [
         }
       },
       {
-        loader: "sass-loader",
+        loader: "fast-sass-loader",
         options: merge({
-          additionalData: sassGlobalStyles,
-          implementation: require('sass'),
-          sassOptions: {
-            fiber: false,
-          },
+          data: sassGlobalStyles,
         }, processConfig.sassLoaderOptions)
       }
     ],

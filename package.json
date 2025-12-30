@@ -1,6 +1,6 @@
 {
   "name": "qmzreact",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "前端react本地启动服务和打包工具",
   "author": {
     "name": "qmz",
@@ -71,7 +71,7 @@
     "react-router": "^5.2.1",
     "react-router-dom": "^5.3.0",
     "sass": "~1.52.1",
-    "sass-loader": "~13.0.2",
+    "fast-sass-loader": "^2.0.0",
     "script-loader": "^0.7.2",
     "shelljs": "^0.8.5",
     "style-loader": "^3.3.1",
@@ -137,7 +137,7 @@
     "react-router": "^5.2.1",
     "react-router-dom": "^5.3.0",
     "sass": "~1.52.1",
-    "sass-loader": "~13.0.2",
+    "fast-sass-loader": "^2.0.0",
     "script-loader": "^0.7.2",
     "shelljs": "^0.8.5",
     "style-loader": "^3.3.1",
