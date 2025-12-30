@@ -1,6 +1,6 @@
 {
   "name": "qmzreact",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "前端react本地启动服务和打包工具",
   "author": {
     "name": "qmz",
