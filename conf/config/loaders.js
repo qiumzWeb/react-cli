@@ -10,7 +10,7 @@ processConfig.sassGlobalStyles.forEach((item) => {
 });
 try {
   fs.accessSync(utils.rootPath('src/global.scss'), fs.constants.F_OK);
-  sassGlobalStyles += `@import "~@/global.scss";`;
+  sassGlobalStyles += `@import "@/global.scss";`;
 } catch (err) {
   // console.log(err);
 };
