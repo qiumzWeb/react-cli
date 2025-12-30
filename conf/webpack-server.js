@@ -69,7 +69,7 @@ module.exports = function startServer() {
       if (spinner.isSpinning) spinner.stop();
     }
     // 捕获错误等信息并显示
-    if (/error/i.test(str)) {
+    if (/error/i.test(str) && !str.includes('SassError')) {
       spinner.fail(str.split(/\r?\n/)[0]);
     }
   });
