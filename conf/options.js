@@ -17,7 +17,7 @@ var {
 exports.utils = utils;
 
 exports.processConfig = {
-    compileDir: typeof compileDir === 'string' ? compileDir : 'src',
+    compileDir: (compileDir && typeof compileDir === 'string') ? compileDir : 'src',
     watch: Array.isArray(watch) ? watch : watch ? [watch] : [],
     port: argvPort || port || 8888,
     isHttps,

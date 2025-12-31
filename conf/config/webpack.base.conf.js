@@ -11,10 +11,11 @@ var fs = require('fs');
 var entry = [];
 var entryFile = ['index.js', 'index.jsx', 'index.ts', 'index.tsx'];
 for (var i = 0; i < entryFile.length; i++) {
+    var entryPath = utils.rootPath(processConfig.compileDir, entryFile[i]);
     try {
-        const stats = fs.statSync(utils.rootPath(processConfig.compileDir, entryFile[i]));
+        const stats = fs.statSync(entryPath);
         if (stats.isFile()) {
-            entry = [utils.rootPath(entryFile[i])];
+            entry = [entryPath];
         }
         break;
     } catch (err) {
