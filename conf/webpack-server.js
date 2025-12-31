@@ -19,7 +19,7 @@ watchFiles.forEach(dirname => {
       /**
        * 重启服务
        */
-      startServer();
+      startServer('rebuild');
     });
     // 杀掉进程
     childProcess.kill('SIGTERM');
@@ -31,7 +31,7 @@ watchFiles.forEach(dirname => {
 /**
  * 启动服务
  */
-module.exports = function startServer() {
+function startServer(status) {
   var spinner = ora('Starting dev server... \n');
   spinner.start();
   childProcess = spawn(
@@ -40,7 +40,7 @@ module.exports = function startServer() {
     {
       env: Object.assign({}, process.env, {
         NODE_ENV: 'development', // 根据需要修改或添加其它环境变量
-        // EXAMPLE_VAR: 'value'
+        NODE_STATUS: status || 'build'
       }),
       stdio: 'pipe'
     }
@@ -82,3 +82,6 @@ module.exports = function startServer() {
     console.log(`======= Service Closed (code: ${exitCode}) ======`);
   });
 }
+
+
+module.exports = startServer

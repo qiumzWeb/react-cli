@@ -1,5 +1,6 @@
 var path = require('path')
 var fs = require('fs')
+var crypto = require('crypto')
 var { cosmiconfigSync } = require('cosmiconfig');
 
 var configFilePath = 'build.config.js';
@@ -58,8 +59,29 @@ function getWatchFileRestartService(pathname, restartService) {
       fs.watch(pathname, (eventType, filename) => {
         // 如果是文件，直接重启服务
         if (stats.isFile()) {
-          // 如果是文件直接重启服务
-          reStart();
+            // 只在文件内容实际修改（mtime 变化）时重启
+            fs.stat(pathname, (err2, newStats) => {
+              if (err2) return;
+              if (eventType == 'rename') {
+                reStart();
+              }
+              if (eventType == 'change') {
+                  fs.readFile(pathname, (err2, data) => {
+                    if (err2) return;
+                    // 计算内容哈希，首次读取时保存哈希，之后比较
+                    var hash = crypto.createHash('sha256').update(data).digest('hex');
+                    if (!stats._contentHash) {
+                      stats._contentHash = hash;
+                      return;
+                    }
+                    // 内容未变则不重启
+                    if (stats._contentHash === hash) return;
+                    // 更新保存的状态与哈希，避免重复触发
+                    stats._contentHash = hash;
+                    reStart();
+                  });
+              }
+            });
         } else if (stats.isDirectory()) {
           // 如果是文件夹，则判断是否删除或者新增
           if (eventType == 'rename') {

@@ -25,14 +25,18 @@ var hotMiddleware = require('webpack-hot-middleware')(compiler)
 // // force page reload when html-webpack-plugin template changes
 compiler.hooks.make.tap('compilation', function (compilation) {
     compilation.hooks.finishModules.tap('html-webpack-plugin-after-emit', function (modules) {
+        process.env.NODE_STATUS = "running";
         hotMiddleware.publish({ action: 'reload' })
     })
 })
 // print compiler finished info
 compiler.hooks.done.tap('AfterCompiler', function(stats) {
   setTimeout(() => {
+    if (process.env.NODE_STATUS === 'rebuild') {
+        hotMiddleware.publish({ action: 'reload' })
+    }
     console.log('webpack \x1b[1mcompiled \x1B[32mfinished \x1B[37min',new Date().toLocaleString(),'\x1b[0m')
-  }, 1000)
+  }, 2000)
 })
 
 
@@ -79,7 +83,9 @@ if (processConfig.isHttps) {
         }
         var uri = 'https://localhost:' + port // 直接显示页面
         console.log('Listening at ' + uri + '\n')
-        opn(uri)
+        if (process.env.NODE_STATUS === 'build') {
+            opn(uri)
+        }
       })
 } else {
     service = app.listen(port, function (err) {
@@ -89,7 +95,9 @@ if (processConfig.isHttps) {
         }
         var uri = 'http://localhost:' + port // 直接显示页面
         console.log('Listening at ' + uri + '\n')
-        opn(uri)
+        if (process.env.NODE_STATUS === 'build') {
+            opn(uri)
+        }
 
     })
 }
