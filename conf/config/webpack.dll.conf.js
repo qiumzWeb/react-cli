@@ -41,6 +41,7 @@ webpack(dllConf, function (err, stats) {
             children: false,
             chunks: false,
             chunkModules: false
-        }) + '\n')
+        }) + '\n');
+    process.exit(0); // 退出进程
 })
 }
