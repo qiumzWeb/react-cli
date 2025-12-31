@@ -9,7 +9,7 @@ var {
     nodeMiddleware, publicPath, buildDir, eslintExclude, alias,
     cssLoaderOptions, postcssLoaderOptions, sassLoaderOptions, 
     babelLoaderOptions, cacheBuildDependencies, compileDependencies,
-    sassGlobalStyles,
+    sassGlobalStyles, compileDir,
     ...webpackConfig
 } = userConfig;
 
@@ -17,7 +17,8 @@ var {
 exports.utils = utils;
 
 exports.processConfig = {
-    watch: watch || ['./src/components'],
+    compileDir: typeof compileDir === 'string' ? compileDir : 'src',
+    watch: Array.isArray(watch) ? watch : watch ? [watch] : [],
     port: argvPort || port || 8888,
     isHttps,
     dll: dll ? merge({

@@ -8,21 +8,24 @@ var childProcess;
 /**
  * 监听目录是否有文件名变动，如果有则重启服务
  */
-if (Array.isArray(processConfig.watch) && processConfig.watch.length > 0) {
-  processConfig.watch.forEach(dirname => {
-    utils.getWatchFileRestartService(utils.rootPath(dirname), () => {
-      // 监听进程退出事件
-      childProcess.on('exit', (code, signal) => {
-        /**
-         * 重启服务
-         */
-        startServer();
-      });
-      // 杀掉进程
-      childProcess.kill('SIGTERM');
-    })
+var watchFiles = [
+  utils.configFilePath, processConfig.compileDir,
+  ...processConfig.watch
+]
+watchFiles.forEach(dirname => {
+  utils.getWatchFileRestartService(utils.rootPath(dirname), () => {
+    // 监听进程退出事件
+    childProcess.on('exit', (code, signal) => {
+      /**
+       * 重启服务
+       */
+      startServer();
+    });
+    // 杀掉进程
+    childProcess.kill('SIGTERM');
   })
-}
+})
+
 
 
 /**

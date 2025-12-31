@@ -2,6 +2,8 @@ var path = require('path')
 var fs = require('fs')
 var { cosmiconfigSync } = require('cosmiconfig');
 
+var configFilePath = 'build.config.js';
+
 function isObj(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
@@ -12,10 +14,10 @@ function isObj(obj) {
  * 如果配置文件不存在或无效，则使用空对象作为默认配置
  */
 function getUserConfig() {
-  var explorer = cosmiconfigSync('build', { searchPlaces: ['build.config.js'] });
+  var explorer = cosmiconfigSync('build', { searchPlaces: [configFilePath] });
   var userBuildConfig = {};
   try {
-    var result = explorer.load(rootPath('build.config.js'));
+    var result = explorer.load(rootPath(configFilePath));
     if (
       result &&
       result.config &&
@@ -37,30 +39,32 @@ function assetsPath(_path) {
     return path.posix.join('', _path)
 }
 
-function rootPath(_path) {
-    return path.join(process.cwd(), _path)
+function rootPath(..._path) {
+    return path.join(process.cwd(), ..._path)
 }
 
 // 监听webpack监控以外的文件重启服务
+/**
+ * 监听文件或目录变化并重启服务
+ * @param {string} pathname - 需要监听的文件或目录路径
+ * @param {function} restartService - 重启服务的回调函数
+ */
 function getWatchFileRestartService(pathname, restartService) {
-  let isFileRename = false
-  fs.access(pathname, fs.constants.F_OK, (err) => {
+  var reStart = typeof restartService === 'function' && restartService || function () { };
+  // 获取文件或目录的状态信息
+  fs.stat(pathname, (err, stats) => {
     if (!err) {
+      // 监听文件或目录的变化事件
       fs.watch(pathname, (eventType, filename) => {
-        if (eventType == 'rename') {
-          isFileRename = true
-        }
-        if (isFileRename) {
-          // 检查文件
-          // 新增文件 且存在 index 的入口文件时 重启服务
-          ['./index.ts', './index.tsx', './index.js', './index.jsx'].forEach(file => {
-            fs.access(path.join(pathname, filename, file), fs.constants.F_OK, (err) => {
-              if (!err) {
-                isFileRename = false;
-                typeof restartService === 'function' && restartService();
-              }
-            });
-          })
+        // 如果是文件，直接重启服务
+        if (stats.isFile()) {
+          // 如果是文件直接重启服务
+          reStart();
+        } else if (stats.isDirectory()) {
+          // 如果是文件夹，则判断是否删除或者新增
+          if (eventType == 'rename') {
+            reStart();
+          }
         }
       })
     }
@@ -68,6 +72,7 @@ function getWatchFileRestartService(pathname, restartService) {
 }
 
 module.exports = {
+  configFilePath,
   getWatchFileRestartService,
   rootPath,
   assetsPath,

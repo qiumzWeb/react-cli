@@ -9,11 +9,13 @@ var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 var fs = require('fs');
 
 var entry = [];
-var entryFile = ['./src/index.js', './src/index.jsx', './src/index.ts', './src/index.tsx'];
+var entryFile = ['index.js', 'index.jsx', 'index.ts', 'index.tsx'];
 for (var i = 0; i < entryFile.length; i++) {
     try {
-        fs.accessSync(utils.rootPath(entryFile[i]), fs.constants.F_OK);
-        entry = [utils.rootPath(entryFile[i])];
+        const stats = fs.statSync(utils.rootPath(processConfig.compileDir, entryFile[i]));
+        if (stats.isFile()) {
+            entry = [utils.rootPath(entryFile[i])];
+        }
         break;
     } catch (err) {
         // continue to next candidate
