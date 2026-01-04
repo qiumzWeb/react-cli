@@ -9,19 +9,27 @@ var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 var fs = require('fs');
 
 var entry = [];
+try {
+  var globalPath = utils.rootPath('src/global.scss');
+  fs.accessSync(globalPath, fs.constants.F_OK);
+  entry.push(globalPath);
+} catch (err) {
+  // console.log(err);
+};
 var entryFile = ['index.js', 'index.jsx', 'index.ts', 'index.tsx'];
 for (var i = 0; i < entryFile.length; i++) {
     var entryPath = utils.rootPath(processConfig.compileDir, entryFile[i]);
     try {
         const stats = fs.statSync(entryPath);
         if (stats.isFile()) {
-            entry = [entryPath];
+            entry.push(entryPath);
         }
         break;
     } catch (err) {
         // continue to next candidate
     }
 }
+
 
 var plugins = [];
 if (processConfig.dll) {
@@ -38,6 +46,8 @@ if (processConfig.dll) {
         })
     ]
 }
+
+
 module.exports = {
     entry: [
         ...processConfig.entry,
