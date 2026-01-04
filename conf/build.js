@@ -25,7 +25,8 @@ module.exports = function buildPackage() {
                 children: false,
                 chunks: false,
                 chunkModules: false
-            }) + '\n')
+            }) + '\n');
+        process.exit(0); // 退出进程
     })
 }
 
