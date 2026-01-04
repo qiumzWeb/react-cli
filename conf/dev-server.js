@@ -43,22 +43,14 @@ compiler.hooks.done.tap('AfterCompiler', function(stats) {
     // receive a single publish. Send the reload multiple times with a few
     // retries to increase the chance the client receives it.
     if (previousNodeStatus === 'rebuild' || process.env.NODE_STATUS === 'rebuild') {
-        var delays = [0, 500, 1500, 3000]
-        delays.forEach(function (d) {
-            setTimeout(function () {
-                try {
-                    hotMiddleware.publish({ action: 'reload' })
-                } catch (e) {
-                    // swallow any errors from publish and continue retries
-                    console.error('hotMiddleware.publish error:', e && e.message)
-                }
-            }, d)
-        })
+        setTimeout(function () {
+            hotMiddleware.publish({ action: 'reload' })
+        }, 2500)
         // reset captured status so subsequent compilations behave normally
         previousNodeStatus = ''
     }
     console.log('webpack \x1b[1mcompiled \x1B[32mfinished \x1B[37min',new Date().toLocaleString(),'\x1b[0m')
-  }, 2000)
+  }, 1000)
 })
 
 
