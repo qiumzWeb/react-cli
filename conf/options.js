@@ -25,8 +25,8 @@ exports.processConfig = {
         chunks: [],
         outpath: utils.rootPath('./dll')
     }, utils.isObj(dll) ? dll : {}) : false,
-    commonChunks: {},
-    proxy: {},
+    commonChunks,
+    proxy,
     eslint: eslint || false,
     eslintExclude: eslintExclude || [],
     nodeMiddleware,
